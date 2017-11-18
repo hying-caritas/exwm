@@ -79,6 +79,9 @@ The outputs available can be identified by running the 'xrandr' utility with
 the first one in result being the primary output."
   :type '(plist :key-type integer :value-type string))
 
+(defvar exwm-randr-default-output nil
+  "Default output to put new workspace on.")
+
 (defvar exwm-workspace--fullscreen-frame-count)
 (defvar exwm-workspace--list)
 (declare-function exwm-workspace--count "exwm-workspace.el")
@@ -127,7 +130,8 @@ the first one in result being the primary output."
         ;; Not all workspaces are fullscreen; reset this counter.
         (setq exwm-workspace--fullscreen-frame-count 0))
       (dotimes (i (exwm-workspace--count))
-        (let* ((output (plist-get exwm-randr-workspace-output-plist i))
+        (let* ((output (or (plist-get exwm-randr-workspace-output-plist i)
+			   exwm-randr-default-output))
                (geometry (lax-plist-get output-plist output))
                (frame (elt exwm-workspace--list i))
                (container (frame-parameter frame 'exwm-container)))
